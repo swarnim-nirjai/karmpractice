@@ -1,0 +1,23 @@
+.about-a { padding-left: 5em; }
+.about-a__text { width: 23em; flex: none; }
+
+/* The portrait, with room above it for the line's curl */
+.portrait { position: relative; flex: none; aspect-ratio: 664 / 720; }
+.portrait img { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 18%; border-radius: 999px 999px 0 0; mix-blend-mode: multiply; }
+.about-me .portrait { align-self: flex-end; height: calc(100% - 3.4em); max-height: 36em; }
+.about-me__text { width: 22em; flex: none; }
+
+.about-path { width: 34em; }
+.about-today { width: 37em; }
+
+.about-name { gap: 3em; }
+.about-name .col { width: 27em; flex: none; }
+.about-name .body { max-width: none; }
+.deva { flex: none; margin: 0; font: 400 6em/1 var(--deva); color: var(--voice); text-align: center; }
+.deva small { display: block; margin-top: .35em; font: 500 .26em/1 var(--hand); color: var(--ink-2); }
+
+.about-talk { width: 29em; }
+
+html.stack .about-a__text, html.stack .about-me__text, html.stack .about-name .col { width: auto; }
+html.stack .about-me .portrait { display: block; width: min(100%, 300px); height: auto; max-height: none; margin: 52px auto 14px; align-self: auto; }
+html.stack .deva { font-size: 4.4em; text-align: left; }

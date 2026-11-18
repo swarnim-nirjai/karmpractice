@@ -1,0 +1,64 @@
+/* Reset, text styles and buttons. Sizes inside the pages are in em, so a whole block can be scaled to fit the screen. */
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; overflow: hidden; background: var(--paper); color: var(--ink); }
+body { font: 400 16px/1.6 var(--text); -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+p { margin: 0 0 1em; }
+h1, h2, h3 { margin: 0; }
+ul, ol { margin: 0; padding: 0; list-style: none; }
+a { color: var(--voice); text-decoration-thickness: 1px; text-underline-offset: .22em; }
+a:hover { text-decoration-thickness: 2px; }
+:focus-visible { outline: 2px solid var(--voice); outline-offset: 3px; border-radius: 4px; }
+[tabindex="-1"]:focus { outline: none; } /* headings focused after in-page travel, for screen readers */
+
+.skip { position: fixed; left: 12px; top: -60px; z-index: 60; background: var(--ink); color: var(--paper); padding: 10px 14px; border-radius: 8px; }
+.skip:focus { top: 12px; }
+
+/* Text */
+.display { font: 700 3.3em/1.06 var(--head); letter-spacing: -.028em; margin: 0 0 .38em; text-wrap: balance; }
+.display--xl { font-size: 4.6em; line-height: 1; }
+.display em { font-style: italic; color: var(--voice); }
+.sub { font: 400 1.7em/1.2 var(--sub); letter-spacing: -.005em; margin: 0 0 .6em; text-wrap: balance; }
+.lead { font: 400 1.16em/1.6 var(--text); margin: 0 0 .9em; text-wrap: pretty; }
+.lead em, .body em { font-style: italic; }
+.body { line-height: 1.72; color: var(--ink-2); max-width: 34em; margin: 0 0 1em; }
+.body strong { color: var(--ink); font-weight: 600; }
+.label { display: flex; align-items: center; gap: .8em; font: 600 .7em/1.2 var(--text); letter-spacing: .18em; text-transform: uppercase; color: var(--ink-2); margin: 0 0 1.4em; }
+.label::before { content: ""; width: 2.2em; height: 1.5px; background: currentColor; opacity: .7; }
+.num { font: 400 1em/1 var(--sub); color: var(--voice); }
+.hl {
+  padding: 0 .04em;
+  background-image: linear-gradient(100deg, transparent .5%, var(--hl) 1.8%, var(--hl) 97.5%, transparent 99.5%);
+  background-repeat: no-repeat;
+  background-position: 0 88%;
+  background-size: 0% 46%;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  transition: background-size 1.2s var(--ease) .25s;
+}
+.hl.in { background-size: 100% 46%; }
+.quote { margin: 0; }
+.quote p { font: 400 1.6em/1.32 var(--sub); color: var(--voice); margin: 0 0 .7em; text-wrap: balance; }
+.quote cite { font: 600 .7em/1 var(--text); font-style: normal; letter-spacing: .18em; text-transform: uppercase; color: var(--ink-2); }
+
+/* Buttons */
+.btn {
+  display: inline-flex; align-items: center; gap: .8em;
+  min-height: 3.1em; padding: 0 1.6em; border: 1.5px solid transparent; border-radius: 999px;
+  font: 600 .88em/1 var(--text); text-decoration: none; cursor: pointer;
+  transition: transform .3s var(--ease), box-shadow .3s var(--ease), background-color .25s, color .25s;
+}
+.btn svg { width: 1.4em; height: .75em; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; transition: transform .3s var(--ease); }
+.btn:hover svg { transform: translateX(4px); }
+.btn--accent { background: var(--accent); color: var(--on-accent); }
+.btn--accent:hover { transform: translateY(-2px); box-shadow: 0 14px 26px -14px var(--accent); }
+.btn--line { border-color: currentColor; color: var(--ink); background: transparent; }
+.btn--line:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.actions { display: flex; flex-wrap: wrap; gap: .75em; margin-top: .6em; }
+
+/* Phones: smaller headings */
+html.stack .display { font-size: 2.35em; }
+html.stack .display--xl { font-size: 3em; }
+html.stack .sub { font-size: 1.42em; }
+html.stack .lead { font-size: 1.06em; }
+html.stack .body { font-size: .97em; }

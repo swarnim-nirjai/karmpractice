@@ -1,0 +1,47 @@
+:root {
+  /* Palette A */
+  --midnight: #14213D;
+  --ivory: #F7F3EA;
+  --burgundy: #7A1F3D;
+  --marigold: #F2A541;
+  --slate: #4A5267;
+  --card: #FFFDF8;
+
+  /* Roles on the light pages */
+  --paper: var(--ivory);
+  --ink: var(--midnight);
+  --ink-2: var(--slate);
+  --line: var(--midnight);
+  --accent: var(--marigold);
+  --on-accent: var(--midnight);
+  --voice: var(--burgundy);
+  --hl: color-mix(in srgb, var(--marigold) 55%, transparent);
+  --rule: color-mix(in srgb, var(--midnight) 16%, transparent);
+
+  /* Roles on the night page (Book) */
+  --night: var(--midnight);
+  --night-ink: var(--ivory);
+  --night-ink-2: color-mix(in srgb, var(--ivory) 80%, transparent);
+  --night-line: var(--marigold);
+  --night-voice: var(--marigold);
+  --night-rule: color-mix(in srgb, var(--ivory) 22%, transparent);
+
+  /* Type: headings in Montserrat Bold, sub-headings in Calistoga, text in Montserrat */
+  --head: "Montserrat", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --sub: "Calistoga", Georgia, serif;
+  --text: "Montserrat", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --hand: "Caveat", "Segoe Print", cursive;
+  --deva: "Tiro Devanagari Sanskrit", "Nirmala UI", "Kohinoor Devanagari", "Noto Serif Devanagari", "Mangal", serif;
+
+  /* Frame: the top bar, the room kept for the page sequence, and the gap above the line */
+  --top: 60px;
+  --dock: 84px;
+  --pad-b: 58px;
+  --gutter: clamp(20px, 4vw, 64px);
+  --ease: cubic-bezier(.22, .8, .24, 1);
+}
+
+html.stack {
+  --top: 56px;
+  --gutter: 18px;
+}

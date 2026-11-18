@@ -1,0 +1,42 @@
+.why-a { width: 39em; padding-left: 5em; }
+.why-b__text { width: 25em; flex: none; }
+
+/* The infinity, drawn by the line */
+.why-loop { width: 62em; }
+.loop { position: relative; width: 100%; flex: 1 1 auto; min-height: 0; max-height: 30em; }
+.loop__title { flex: none; margin: .3em 0 0; font: 400 1.45em/1.2 var(--sub); color: var(--voice); text-align: center; }
+.loop__key { display: none; }
+
+/* Transfer, Exchange, Mobilisation */
+.why-terms { width: 64em; }
+.why-terms > .body { max-width: 46em; margin-bottom: 1.6em; }
+.terms { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2em; }
+.term { padding: 1.5em 1.5em 1.3em; border-top: 1.5px solid var(--line); }
+.term svg { display: block; width: 7.5em; height: 3em; margin-bottom: 1em; overflow: visible; }
+.term svg path, .term svg circle { fill: none; stroke: var(--line); stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.term h3 { margin: 0 0 .5em; font: 700 1.08em/1.3 var(--head); }
+.term p { margin: 0; font-size: .94em; line-height: 1.66; color: var(--ink-2); }
+.term--featured { border-top-color: var(--accent); border-radius: 0 0 18px 18px; background: var(--ink); color: var(--paper); }
+.term--featured h3 { color: var(--paper); }
+.term--featured p { color: var(--paper); opacity: .86; }
+.term--featured svg path, .term--featured svg circle { stroke: var(--accent); }
+
+/* The quote, underlined by the line */
+.why-quote { width: 54em; justify-content: flex-end; padding-bottom: calc(var(--pad-b) + 2.6em); }
+.why-quote .quote p { margin: 0; font-size: 2.45em; line-height: 1.2; color: var(--ink); }
+.why-quote .quote p em { font-style: normal; color: var(--voice); }
+.underline { flex: none; width: 92%; height: 3.4em; margin-top: .5em; }
+
+.why-outro { width: 34em; }
+
+/* Phones: the infinity's points are numbered, with a key below */
+html.stack .why-b__text { width: auto; }
+html.stack .loop { width: 100%; height: auto; max-height: none; aspect-ratio: 2 / 1; margin-top: 8px; }
+html.stack .loop__title { margin-top: 40px; text-align: left; }
+html.stack .loop__key { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 16px; counter-reset: stage; font-size: .88em; color: var(--ink-2); }
+html.stack .loop__key li { display: flex; align-items: baseline; gap: 8px; counter-increment: stage; }
+html.stack .loop__key li::before { content: counter(stage); min-width: 12px; font: 500 1.25em/1 var(--hand); color: var(--voice); }
+html.stack .terms { grid-template-columns: 1fr; gap: 20px; }
+html.stack .why-quote { padding-bottom: 30px; }
+html.stack .why-quote .quote p { font-size: 1.75em; }
+html.stack .underline { width: 100%; height: 44px; }

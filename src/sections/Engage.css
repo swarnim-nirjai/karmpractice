@@ -1,0 +1,24 @@
+.engage-a { padding-left: 5em; }
+.engage-a__text { width: 24em; flex: none; }
+.ways li { border-top: 1px solid var(--rule); }
+.ways li:last-child { border-bottom: 1px solid var(--rule); }
+.ways a { display: flex; align-items: center; justify-content: space-between; gap: 1em; padding: .8em .1em; font: 400 1.25em/1.2 var(--sub); color: var(--ink); text-decoration: none; }
+.ways a span { font: 400 .7em/1 var(--sub); color: var(--voice); }
+.ways a:hover { color: var(--voice); }
+
+.engage-journey { width: 84em; }
+.engage-journey .intro { max-width: 52em; margin-bottom: 1.4em; color: var(--ink-2); }
+.engage-more { width: 62em; display: grid; grid-template-columns: 1fr 1fr; column-gap: 4em; align-content: center; }
+
+/* The end of the line: it draws the logo once more and comes to rest at its centre. */
+.finale { gap: 3.5em; }
+.block.row > .finale__art { height: min(22em, 80%); }
+.foot { width: 22em; flex: none; font-size: .9em; color: var(--ink-2); }
+.foot p { margin: 0 0 .6em; }
+.foot__name { display: block; margin-bottom: .6em; font: 700 1.9em/1 var(--head); letter-spacing: -.02em; color: var(--ink); }
+.foot__legal { margin-top: 1.1em; font-size: .88em; }
+
+html.stack .engage-a__text, html.stack .foot { width: auto; }
+html.stack .engage-more { display: grid; grid-template-columns: 1fr; gap: 20px; }
+html.stack .engage-more > * + * { margin-top: 14px; }
+html.stack .block.row > .finale__art { width: 62%; height: auto; margin: 20px 0 34px; }

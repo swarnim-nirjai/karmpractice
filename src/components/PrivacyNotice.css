@@ -1,0 +1,21 @@
+.privacy { width: min(1240px, 94vw); height: min(640px, 88vh); max-width: none; max-height: none; padding: 0; overflow: hidden; border: 0; border-radius: 20px; background: var(--card); color: var(--ink); box-shadow: 0 30px 80px -20px rgb(0 0 0 / .35); }
+.privacy::backdrop { background: color-mix(in srgb, var(--midnight) 45%, transparent); }
+.privacy__sheet { height: 100%; display: flex; flex-direction: column; padding: 24px 32px 22px; font-size: 13.5px; }
+.privacy__head { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; margin-bottom: 16px; padding-bottom: 14px; border-bottom: 1px solid var(--rule); }
+.privacy__head .label { margin-bottom: .8em; }
+.privacy__title { font: 700 28px/1 var(--head); letter-spacing: -.02em; }
+
+/* The text runs in columns side by side; if it doesn't all fit, the sheet moves sideways. */
+.privacy__columns { flex: 1; min-height: 0; columns: 17em; column-gap: 2.6em; column-fill: auto; overflow-x: auto; overflow-y: hidden; scrollbar-width: none; }
+.privacy__columns::-webkit-scrollbar { display: none; }
+.privacy__columns section { margin-bottom: 1.1em; }
+.privacy__columns .sub { margin: 0 0 .4em; font-size: 1.3em; break-after: avoid; }
+.privacy__columns p, .privacy__columns li { color: var(--ink-2); line-height: 1.6; }
+.privacy__columns strong { color: var(--ink); }
+.privacy__columns ul { margin: 0 0 1em; padding-left: 1.2em; list-style: disc; }
+.privacy__columns li { margin-bottom: .4em; }
+
+/* Phones: a sheet from the bottom of the screen that scrolls down. */
+html.stack .privacy { width: 100vw; height: auto; max-height: 90dvh; margin: auto auto 0; border-radius: 20px 20px 0 0; }
+html.stack .privacy__sheet { height: auto; max-height: 90dvh; padding: 20px 22px 26px; }
+html.stack .privacy__columns { columns: auto; overflow-x: hidden; overflow-y: auto; }

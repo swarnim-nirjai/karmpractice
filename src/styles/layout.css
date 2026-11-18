@@ -1,0 +1,61 @@
+/* The pages side by side on a sideways track, the line drawn over them, and the downwards layout for phones. */
+
+/* The track scrolls sideways. --s (set by the engine) scales the type with the screen height. */
+.track { position: fixed; inset: 0; display: flex; overflow-x: auto; overflow-y: hidden; overscroll-behavior: contain; scrollbar-width: none; outline: none; font-size: calc(16px * var(--s, 1)); }
+.track::-webkit-scrollbar { display: none; }
+
+.chapter { --thread: var(--line); position: relative; flex: none; display: flex; align-items: stretch; height: 100%; padding: var(--top) 0 var(--dock); background: var(--paper); }
+.chapter--night { --thread: var(--night-line); --ink: var(--night-ink); --ink-2: var(--night-ink-2); --voice: var(--night-voice); --rule: var(--night-rule); --line: var(--night-ink); background: var(--night); color: var(--night-ink); }
+.chapter--night .btn--line { color: var(--night-ink); }
+.chapter--night .btn--line:hover { background: var(--night-ink); color: var(--night); }
+
+/* A block is one screen-high part of a page. --f (set by the engine) scales a crowded block down to fit. */
+.block { position: relative; z-index: 2; flex: none; display: flex; flex-direction: column; justify-content: center; padding: 1.2em 2.4em var(--pad-b); font-size: calc(1em * var(--f, 1)); }
+.block.row { flex-direction: row; align-items: center; gap: 3.6em; }
+
+/* Where the line draws an original drawing: each keeps the drawing's proportions. */
+.art { position: relative; flex: none; }
+.block.row > .art { height: 100%; max-height: 36em; }
+[data-draw="logo"] { aspect-ratio: 1081 / 739; }
+[data-draw="about"] { aspect-ratio: 955 / 885; }
+[data-draw="why"] { aspect-ratio: 898 / 1058; }
+[data-draw="practice"] { aspect-ratio: 1076 / 1087; }
+[data-draw="book"] { aspect-ratio: 970 / 986; }
+[data-draw="engage"] { aspect-ratio: 738 / 1082; }
+
+/* The line, its pen, and the points and notes along it */
+.thread { position: absolute; left: 0; top: 0; z-index: 3; pointer-events: none; overflow: visible; }
+.thread path { fill: none; stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; }
+.thread .nib { fill: var(--accent); stroke-width: 1.5; }
+.thread .halo { fill: var(--accent); opacity: .28; }
+.marks { position: absolute; left: 0; top: 0; z-index: 4; pointer-events: none; }
+.pin { position: absolute; width: 11px; height: 11px; margin: -5.5px 0 0 -5.5px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 1.5px var(--line); transform: scale(0); transition: transform .45s cubic-bezier(.3, 1.7, .5, 1); }
+.pin.night { box-shadow: 0 0 0 1.5px var(--night-ink); }
+.pin.on { transform: scale(1); }
+.pin-note { position: absolute; font: 500 calc(19px * var(--s, 1))/1.05 var(--hand); color: var(--ink-2); white-space: nowrap; opacity: 0; transition: opacity .7s .15s; }
+.pin-note.on { opacity: 1; }
+
+/* Reveal on first view (classes added by the engine) */
+.rv { opacity: 0; transform: translateX(28px); transition: opacity .9s var(--ease), transform 1.1s var(--ease); }
+.rv.in { opacity: 1; transform: none; }
+.ink { fill: none; stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset var(--dur, 1.6s) cubic-bezier(.6, .04, .3, 1) var(--delay, 0s); }
+.in .ink, .ink.in { stroke-dashoffset: 0; }
+
+/* Phones and portrait screens: the same pages, read downwards. The line runs down the left margin. */
+html.stack { height: auto; overflow-x: hidden; overflow-y: auto; }
+html.stack body { height: auto; overflow: visible; }
+html.stack .track { position: relative; inset: auto; display: block; overflow: visible; padding: var(--top) 0 104px; font-size: 16px; }
+html.stack .chapter { display: block; height: auto; padding: 0; }
+html.stack .chapter--night { padding: 6px 0; }
+html.stack .block { display: block; width: auto; padding: 30px 22px 30px 50px; margin: 0; font-size: 1em; }
+html.stack .block > * + * { margin-top: 16px; }
+html.stack .block.row > .art, html.stack .art { width: 100%; height: auto; max-height: none; margin: 26px 0 38px; }
+html.stack .rv { transform: translateY(18px); }
+html.stack .rv.in { transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: 0s !important; transition-delay: 0s !important; animation: none !important; }
+  .rv, html.stack .rv { opacity: 1; transform: none; }
+  .ink { stroke-dashoffset: 0; }
+  .hl { background-size: 100% 46%; }
+}
