@@ -5,7 +5,6 @@
 .stop svg path { fill: none; stroke: currentColor; stroke-width: .85; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
 .stop i { display: block; width: 7px; height: 7px; margin: 6px 0 5px; border: 1.3px solid currentColor; border-radius: 50%; transition: background-color .3s, border-color .3s, transform .3s var(--ease); }
 .stop span { white-space: nowrap; opacity: .72; }
-.stop span b { margin-right: 4px; font: 400 12.5px/1 var(--sub); color: var(--voice); }
 .stop.passed svg { opacity: .8; }
 .stop.passed i { background: currentColor; }
 .stop[aria-current="true"] svg { opacity: 1; transform: translateY(-2px) scale(1.14); }
@@ -15,7 +14,6 @@
 
 /* Over the night page the sequence turns light. */
 .dock.night { color: var(--night-ink); }
-.dock.night .stop span b { color: var(--accent); }
 
 /* Phones: a small floating card, drawings only, because the page scrolls underneath it. */
 html.stack .dock { padding: 6px 8px 3px; border-radius: 18px; background: color-mix(in srgb, var(--ivory) 95%, transparent); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); box-shadow: 0 10px 28px -12px color-mix(in srgb, var(--midnight) 40%, transparent); }

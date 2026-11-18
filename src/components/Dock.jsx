@@ -1,4 +1,4 @@
-import { CHAPTERS, pageNumber } from "../site.js";
+import { CHAPTERS } from "../site.js";
 import LineArt from "./LineArt.jsx";
 import "./Dock.css";
 
@@ -12,12 +12,12 @@ export default function Dock({ active, night }) {
             <a
               className={i < active ? "stop passed" : "stop"}
               href={`#${chapter.id}`}
-              aria-label={`${pageNumber(i)} ${chapter.label}`}
+              aria-label={chapter.label}
               aria-current={i === active ? "true" : undefined}
             >
               <LineArt name={chapter.drawing} detail="thumb" />
               <i />
-              <span aria-hidden="true"><b>{pageNumber(i)}</b>{chapter.label}</span>
+              <span aria-hidden="true">{chapter.label}</span>
             </a>
           </li>
         ))}

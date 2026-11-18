@@ -2,8 +2,7 @@
 .engage-a__text { width: 24em; flex: none; }
 .ways li { border-top: 1px solid var(--rule); }
 .ways li:last-child { border-bottom: 1px solid var(--rule); }
-.ways a { display: flex; align-items: center; justify-content: space-between; gap: 1em; padding: .8em .1em; font: 400 1.25em/1.2 var(--sub); color: var(--ink); text-decoration: none; }
-.ways a span { font: 400 .7em/1 var(--sub); color: var(--voice); }
+.ways a { display: block; padding: .8em .1em; font: 400 1.25em/1.2 var(--sub); color: var(--ink); text-decoration: none; }
 .ways a:hover { color: var(--voice); }
 
 .engage-journey { width: 84em; }

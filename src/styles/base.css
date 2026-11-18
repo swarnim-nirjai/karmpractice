@@ -25,7 +25,6 @@ a:hover { text-decoration-thickness: 2px; }
 .body strong { color: var(--ink); font-weight: 600; }
 .label { display: flex; align-items: center; gap: .8em; font: 600 .7em/1.2 var(--text); letter-spacing: .18em; text-transform: uppercase; color: var(--ink-2); margin: 0 0 1.4em; }
 .label::before { content: ""; width: 2.2em; height: 1.5px; background: currentColor; opacity: .7; }
-.num { font: 400 1em/1 var(--sub); color: var(--voice); }
 .hl {
   padding: 0 .04em;
   background-image: linear-gradient(100deg, transparent .5%, var(--hl) 1.8%, var(--hl) 97.5%, transparent 99.5%);

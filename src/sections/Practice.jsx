@@ -56,18 +56,18 @@ export default function Practice() {
       <div className="block practice-think">
         <h3 className="sub">How I think about it</h3>
         <p className="body rv">My approach rests on five patterns from the research on how evidence gets used. None is proven as a cause. Each is the best-supported pattern across reviews and evaluations.</p>
-        <ol className="numbered">
+        <ul className="items">
           {PATTERNS.map(([title, text]) => <li key={title} className="rv"><strong>{title}</strong>{text}</li>)}
-        </ol>
-        <div className="knots" data-art="knots" data-items=".numbered li" />
+        </ul>
+        <div className="knots" data-art="knots" data-items=".items li" />
       </div>
 
       <div className="block practice-method">
         <h3 className="sub">The method in four steps</h3>
-        <ol className="numbered">
+        <ol className="items">
           {STEPS.map(([title, text]) => <li key={title} className="rv"><strong>{title}</strong>{text}</li>)}
         </ol>
-        <div className="knots" data-art="knots" data-items=".numbered li" />
+        <div className="knots" data-art="knots" data-items=".items li" />
       </div>
 
       <div className="block practice-offer">

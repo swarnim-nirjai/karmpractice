@@ -1,4 +1,4 @@
-import { CHAPTERS, pageNumber } from "../site.js";
+import { CHAPTERS } from "../site.js";
 import Button from "./Button.jsx";
 import LineArt from "./LineArt.jsx";
 import "./TopBar.css";
@@ -14,10 +14,7 @@ export default function TopBar({ active }) {
           <span className="brand__tag">Knowledge and Research Mobilisation</span>
         </span>
       </a>
-      <p className="bar__where">
-        <span className="num">{pageNumber(active)}</span>
-        <b>{CHAPTERS[active].label}</b>
-      </p>
+      <p className="bar__where">{CHAPTERS[active].label}</p>
       <Button href="#journey" className="bar__cta">Share your research journey</Button>
     </header>
   );

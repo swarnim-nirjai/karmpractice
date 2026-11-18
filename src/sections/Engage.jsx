@@ -1,7 +1,7 @@
 import Button from "../components/Button.jsx";
 import Drawing from "../components/Drawing.jsx";
 import { JourneyForm, SignupForm } from "../components/Forms.jsx";
-import { MAILTO, pageNumber } from "../site.js";
+import { MAILTO } from "../site.js";
 import "./Engage.css";
 
 const WAYS = [
@@ -17,9 +17,7 @@ export default function Engage() {
         <div className="engage-a__text">
           <h2 className="display display--xl" id="engage-title" data-drift>Engage</h2>
           <ul className="ways">
-            {WAYS.map(([href, label], i) => (
-              <li key={href}><a href={href}>{label} <span>{pageNumber(i)}</span></a></li>
-            ))}
+            {WAYS.map(([href, label]) => <li key={href}><a href={href}>{label}</a></li>)}
           </ul>
         </div>
         <Drawing name="engage" label="One-line drawing: a seated figure inside a turning gyroscope, resting on a stack of cubes." />

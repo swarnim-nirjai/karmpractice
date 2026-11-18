@@ -8,7 +8,5 @@ export const CHAPTERS = [
   { id: "engage", label: "Engage", drawing: "engage" },
 ];
 
-export const pageNumber = (index) => String(index + 1).padStart(2, "0");
-
 export const EMAIL = "meenakshi@karmpractice.com";
 export const MAILTO = `mailto:${EMAIL}`;
