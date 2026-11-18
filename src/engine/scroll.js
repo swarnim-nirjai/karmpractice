@@ -12,7 +12,7 @@ export function createScroller(track, { isStack, reduced, privacy }) {
   const doc = document.documentElement;
   let target = 0, gliding = false, frame = 0;
 
-  const pos = () => (isStack() ? window.scrollY : track.scrollLeft);
+  const pos = () => Math.max(0, isStack() ? window.scrollY : track.scrollLeft); // never negative: phones bounce past the top
   const view = () => (isStack() ? window.innerHeight : window.innerWidth);
   const max = () => (isStack() ? Math.max(0, doc.scrollHeight - window.innerHeight) : track.scrollWidth - track.clientWidth);
   const sync = () => { target = pos(); };

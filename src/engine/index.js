@@ -4,7 +4,7 @@ import { revealOnView } from "./reveal.js";
 import { createScroller } from "./scroll.js";
 import { buildLine } from "./line/build.js";
 import { drawTo, lengthAt } from "./line/pen.js";
-import { smooth } from "./line/geometry.js";
+import { clamp, smooth } from "./line/geometry.js";
 
 const INTRO_DELAY = 500; // ms before the pen starts drawing the logo
 const INTRO_TIME = 3400; // ms the opening drawing takes
@@ -50,11 +50,14 @@ export function createEngine(track, { privacy, onActive, onNight }) {
     return p + ahead;
   }
 
-  /** Which page is in view, and whether the page sequence sits over the night page. */
+  /**
+   * Which page is in view, and whether the page sequence sits over the night page.
+   * The position is clamped: a phone's bounce at either end reads beyond the page.
+   */
   function report() {
-    const p = scroller.pos(), v = scroller.view(), m = scroller.max();
-    const starts = chapters.map((ch) => Math.min(m, Math.max(0, (stack ? ch.offsetTop : ch.offsetLeft) - v * 0.4)));
-    const page = p >= m - 2 ? chapters.length - 1 : starts.filter((s) => p >= s - 1).length - 1;
+    const v = scroller.view(), m = scroller.max(), p = clamp(scroller.pos(), 0, m), last = chapters.length - 1;
+    const starts = chapters.map((ch) => clamp((stack ? ch.offsetTop : ch.offsetLeft) - v * 0.4, 0, m));
+    const page = p >= m - 2 ? last : clamp(starts.filter((s) => p >= s - 1).length - 1, 0, last);
     if (page !== active) {
       active = page;
       onActive(page);

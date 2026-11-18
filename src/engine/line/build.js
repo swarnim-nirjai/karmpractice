@@ -4,13 +4,17 @@ import { clamp, pathData, round1 } from "./geometry.js";
 
 const SVG = "http://www.w3.org/2000/svg";
 
+/** Points per drawn segment. Short segments keep each frame's repaint small, on phones especially. */
+const SEGMENT_POINTS = 48;
+
 /**
  * Builds the one continuous line for the current layout. It visits every place the line
- * draws ([data-art], in page order), joins them with connectors, splits the result into
- * one path per page so each can take its page's colour, and places the pins and notes.
+ * draws ([data-art], in page order), joins them with connectors, cuts the result into short
+ * segments (coloured by page) that the pen shows one by one, and places the pins and notes.
  *
- * Returns what the pen needs: the line's points with the length reached at each, and a
- * table from the reader's position (x sideways, y downwards) to the length to draw.
+ * Returns what the pen needs: the line's points with the length reached at each, the
+ * segments, and a table from the reader's position (x sideways, y downwards) to the length
+ * to draw.
  */
 export function buildLine(track, stack) {
   const svg = track.querySelector(".thread"), group = svg.querySelector("g"), marks = track.querySelector(".marks");
@@ -84,33 +88,37 @@ export function buildLine(track, stack) {
   }
   for (let i = 1; i < keys.length; i++) keys[i] = Math.max(keys[i], keys[i - 1]);
 
-  // One path per page, split where the line first enters the next page.
-  const pos = stack ? ys : xs, stretches = [];
-  let cur = { page: 0, pts: [[xs[0], ys[0]]], start: 0 };
+  // One run per page, split where the line first enters the next page. Each point carries the length reached at it.
+  const pos = stack ? ys : xs, runs = [];
+  let run = { page: 0, pts: [[xs[0], ys[0], 0]] };
   for (let i = 1, next = 0; i < xs.length; i++) {
     while (next < c.bounds.length && pos[i] >= c.bounds[next] && pos[i - 1] < c.bounds[next]) {
       const t = (c.bounds[next] - pos[i - 1]) / (pos[i] - pos[i - 1]);
-      const cut = [xs[i - 1] + (xs[i] - xs[i - 1]) * t, ys[i - 1] + (ys[i] - ys[i - 1]) * t];
-      const cutAt = at[i - 1] + (at[i] - at[i - 1]) * t;
-      cur.pts.push(cut); cur.end = cutAt; stretches.push(cur);
-      cur = { page: ++next, pts: [cut], start: cutAt };
+      const cut = [xs[i - 1] + (xs[i] - xs[i - 1]) * t, ys[i - 1] + (ys[i] - ys[i - 1]) * t, at[i - 1] + (at[i] - at[i - 1]) * t];
+      run.pts.push(cut);
+      runs.push(run);
+      run = { page: ++next, pts: [cut] };
     }
-    cur.pts.push([xs[i], ys[i]]);
+    run.pts.push([xs[i], ys[i], at[i]]);
   }
-  cur.end = length;
-  stretches.push(cur);
+  runs.push(run);
 
+  // Each run becomes short segments in its page's colour; consecutive segments share an endpoint.
+  // They start hidden: the pen shows them as it reaches them.
   group.replaceChildren();
-  const paths = stretches.map(({ page, pts, start, end }) => {
-    const el = document.createElementNS(SVG, "path"), len = end - start + 1;
+  const segments = [];
+  for (const { page, pts } of runs) {
     const colour = getComputedStyle(chapters[page]).getPropertyValue("--thread").trim();
-    el.setAttribute("d", pathData(pts));
-    el.style.stroke = colour;
-    el.style.strokeDasharray = `${len} ${len + 40}`;
-    el.style.strokeDashoffset = len;
-    group.appendChild(el);
-    return { el, start, length: len, colour, shown: -1 };
-  });
+    const g = document.createElementNS(SVG, "g");
+    g.style.stroke = colour;
+    group.appendChild(g);
+    for (let i = 0; i + 1 < pts.length; i += SEGMENT_POINTS - 1) {
+      const part = pts.slice(i, i + SEGMENT_POINTS), el = document.createElementNS(SVG, "path");
+      el.style.display = "none";
+      g.appendChild(el);
+      segments.push({ el, pts: part, d: pathData(part), start: part[0][2], colour, state: "hidden" });
+    }
+  }
 
   marks.replaceChildren();
   for (const pin of pins) {
@@ -135,6 +143,6 @@ export function buildLine(track, stack) {
   return {
     xs: Float64Array.from(xs), ys: Float64Array.from(ys), at: Float64Array.from(at),
     keys: Float64Array.from(keys), keyLengths: Float64Array.from(keyLengths),
-    total: length, paths, pins,
+    total: length, segments, cursor: -1, pins,
   };
 }
