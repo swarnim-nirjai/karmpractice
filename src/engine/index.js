@@ -9,6 +9,9 @@ import { clamp, smooth } from "./line/geometry.js";
 const INTRO_DELAY = 500; // ms before the pen starts drawing the logo
 const INTRO_TIME = 3400; // ms the opening drawing takes
 const HINT_DELAY = 3600; // ms before "Follow the line" appears, if the reader hasn't moved
+const DRAW_SPEED = 9000; // px of line per second: the pen's steady drawing pace
+const CATCH_UP = 1.2; // after a jump the pen also closes this share of the remaining gap each second, so it catches up in a few seconds
+const REWIND_SPEED = 20000; // px of line per second when the reader goes back
 
 /**
  * Brings the page to life: lays it out to fit the screen, draws the one continuous line and
@@ -28,7 +31,7 @@ export function createEngine(track, { privacy, onActive, onNight }) {
   const stopReveals = revealOnView(track);
   const introStart = performance.now() + INTRO_DELAY;
   let line = null, drawn = 0, active = -1, night = null;
-  let frame = 0, resizeTimer = 0, hintTimer = 0, alive = true;
+  let frame = 0, resizeTimer = 0, hintTimer = 0, alive = true, lastTick = 0;
   let lastWidth = window.innerWidth, lastStack = stack;
 
   function layout() {
@@ -81,9 +84,13 @@ export function createEngine(track, { privacy, onActive, onNight }) {
 
   function tick(now) {
     const goal = reduced ? lengthAt(line, lead()) : now < introStart && scroller.pos() < 10 ? 0 : lengthAt(line, lead(now));
-    const gap = goal - drawn;
+    const gap = goal - drawn, dt = lastTick ? Math.min(0.05, (now - lastTick) / 1000) : 1 / 60;
+    lastTick = now;
     if (reduced || Math.abs(gap) < 0.5) drawn = goal;
-    else drawn += gap * (gap > 0 ? 0.085 : 0.15) + Math.sign(gap) * Math.min(Math.abs(gap), 1.2);
+    else {
+      const rate = gap > 0 ? Math.max(DRAW_SPEED, gap * CATCH_UP) : Math.max(REWIND_SPEED, -gap * 2 * CATCH_UP);
+      drawn += Math.sign(gap) * Math.min(Math.abs(gap), rate * dt);
+    }
     drawTo(line, drawn, nib, halo);
     report();
     if (!reduced && !stack) drift();

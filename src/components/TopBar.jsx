@@ -8,7 +8,7 @@ export default function TopBar({ active }) {
   return (
     <header className="bar">
       <a className="brand" href="#home" aria-label="KARM Practice, home">
-        <LineArt name="logo" detail="thumb" className="brand__mark" />
+        <LineArt name="logo" className="brand__mark" />
         <span>
           <span className="brand__name">KARM Practice</span>
           <span className="brand__tag">Knowledge and Research Mobilisation</span>

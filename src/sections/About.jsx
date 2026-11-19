@@ -11,7 +11,7 @@ export default function About() {
         <div className="about-a__text">
           <h2 className="display display--xl" id="about-title" data-drift>About</h2>
           <h3 className="sub">Why this place exists</h3>
-          <p className="lead rv">Research gets written, reviewed and published. Then, too often, it stops. KARM Practice is where I follow what happens next: who used the work, who didn’t, and why.</p>
+          <p className="lead rv">Once a finding is published, the record usually stops there. KARM Practice is where I keep following it: who picked the work up, where it stalled, and why.</p>
         </div>
         <Drawing name="about" label="One-line drawing: a figure standing on a ring that circles a globe." />
       </div>
