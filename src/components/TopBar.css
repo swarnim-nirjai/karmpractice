@@ -11,5 +11,4 @@ html.stack .bar { gap: 12px; }
 html.stack .brand { gap: 9px; }
 html.stack .brand__mark { width: 42px; height: 29px; }
 html.stack .brand__name { font-size: 16.5px; white-space: nowrap; }
-html.stack .brand__tag, html.stack .bar__cta { display: none; }
-html.stack .bar__where { margin: 0 0 0 auto; font-size: 12px; white-space: nowrap; }
+html.stack .brand__tag, html.stack .bar__cta, html.stack .bar__where { display: none; } /* the pill at the bottom names the page in view */

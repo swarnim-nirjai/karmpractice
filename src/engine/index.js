@@ -16,9 +16,9 @@ const REWIND_SPEED = 20000; // px of line per second when the reader goes back
 /**
  * Brings the page to life: lays it out to fit the screen, draws the one continuous line and
  * keeps its pen just ahead of the reader (forwards and backwards), and reports which page is
- * in view. Returns a function that undoes all of it.
+ * in view and which way the site reads. Returns a function that undoes all of it.
  */
-export function createEngine(track, { privacy, onActive, onNight }) {
+export function createEngine(track, { privacy, onActive, onNight, onMode }) {
   const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const chapters = [...track.querySelectorAll(".chapter")];
   const blocks = [...track.querySelectorAll(".block")];
@@ -36,6 +36,7 @@ export function createEngine(track, { privacy, onActive, onNight }) {
 
   function layout() {
     stack = applyMode();
+    onMode(stack);
     for (const title of titles) title.style.transform = "";
     fitBlocks(blocks, stack);
     line = buildLine(track, stack);

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { createEngine } from "./engine/index.js";
+import { isStack } from "./engine/mode.js";
 import TopBar from "./components/TopBar.jsx";
 import Thread from "./components/Thread.jsx";
 import Dock from "./components/Dock.jsx";
@@ -16,8 +17,9 @@ export default function App() {
   const privacy = useRef(null);
   const [active, setActive] = useState(0);
   const [night, setNight] = useState(false);
+  const [stack, setStack] = useState(isStack);
 
-  useEffect(() => createEngine(track.current, { privacy: privacy.current, onActive: setActive, onNight: setNight }), []);
+  useEffect(() => createEngine(track.current, { privacy: privacy.current, onActive: setActive, onNight: setNight, onMode: setStack }), []);
 
   return (
     <>
@@ -32,7 +34,7 @@ export default function App() {
         <Book />
         <Engage />
       </main>
-      <Dock active={active} night={night} />
+      <Dock active={active} night={night} stack={stack} />
       <PrivacyNotice ref={privacy} />
     </>
   );
