@@ -23,7 +23,7 @@ The build in `dist/` is a static site that can be hosted anywhere.
 src/
 ├── main.jsx, App.jsx   entry point and page shell
 ├── site.js             the pages in order, and the contact email
-├── sections/           the six pages: Home, About, Why mobilisation, Practice, Book, Engage
+├── sections/           the six pages: Home, Why mobilisation, Practice, Book, About, Engage
 ├── components/         top bar, page sequence, buttons, forms, privacy notice, drawings
 ├── engine/             the site’s behaviour, in plain JavaScript (no React)
 │   ├── index.js        start-up, the pen following the reader, resizing

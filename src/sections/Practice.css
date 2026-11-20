@@ -1,8 +1,9 @@
 /* The marigold opening panel runs to the bottom of the screen, under the page sequence. */
 .banner { --ink: var(--midnight); --ink-2: var(--midnight); --voice: var(--midnight); --rule: color-mix(in srgb, var(--midnight) 25%, transparent); padding-left: 5em; margin-bottom: calc(-1 * var(--dock)); padding-bottom: calc(var(--pad-b) + var(--dock)); background: var(--marigold); color: var(--midnight); }
-.banner__text { width: 33em; flex: none; }
-.banner__title { font-size: 2.6em; }
-.banner__title em { font-style: italic; font-weight: 500; color: var(--midnight); opacity: .7; }
+.block.banner { gap: 6em; } /* room for the line to rise into the drawing clear of the text */
+.banner__text { width: 29em; flex: none; }
+.banner__ask { margin: 0 0 .55em; font: 700 2em/1.12 var(--head); letter-spacing: -.022em; }
+.banner__ask em { font-style: italic; font-weight: 500; opacity: .7; }
 .banner .sub { margin: .2em 0 .9em; }
 .banner .body { opacity: .92; }
 
@@ -38,7 +39,7 @@
 
 html.stack .banner { margin: 0; padding-bottom: 30px; }
 html.stack .banner__text { width: auto; }
-html.stack .banner__title { font-size: 1.7em; }
+html.stack .banner__ask { font-size: 1.45em; }
 html.stack .items, html.stack .offers, html.stack .practice-evidence { display: grid; grid-template-columns: 1fr; grid-auto-flow: row; gap: 20px; }
 html.stack .practice-evidence > * + * { margin-top: 14px; }
 html.stack .knots { display: none; }

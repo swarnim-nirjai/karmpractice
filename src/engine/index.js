@@ -7,10 +7,10 @@ import { drawTo, lengthAt } from "./line/pen.js";
 import { clamp, smooth } from "./line/geometry.js";
 
 const INTRO_DELAY = 500; // ms before the pen starts drawing the logo
-const INTRO_TIME = 3400; // ms the opening drawing takes
-const HINT_DELAY = 3600; // ms before "Follow the line" appears, if the reader hasn't moved
-const DRAW_SPEED = 9000; // px of line per second: the pen's steady drawing pace
-const CATCH_UP = 1.2; // after a jump the pen also closes this share of the remaining gap each second, so it catches up in a few seconds
+const INTRO_TIME = 4100; // ms the opening drawing takes
+const HINT_DELAY = 4300; // ms before "Follow the line" appears, if the reader hasn't moved
+const DRAW_SPEED = 7400; // px of line per second: the pen's steady drawing pace
+const CATCH_UP = 1; // after a jump the pen also closes this share of the remaining gap each second, so it catches up in a few seconds
 const REWIND_SPEED = 20000; // px of line per second when the reader goes back
 
 /**

@@ -24,7 +24,8 @@ export function createScroller(track, { isStack, reduced, privacy }) {
       gliding = false;
       return;
     }
-    track.scrollLeft += gap * 0.12;
+    // At least a pixel a frame: browsers round smaller steps away, which would stall the glide just short of the page.
+    track.scrollLeft += Math.sign(gap) * Math.max(Math.abs(gap) * 0.12, 1);
     frame = requestAnimationFrame(glide);
   }
 

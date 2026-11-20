@@ -11,6 +11,9 @@ import Why from "./sections/Why.jsx";
 import Practice from "./sections/Practice.jsx";
 import Book from "./sections/Book.jsx";
 import Engage from "./sections/Engage.jsx";
+import { CHAPTERS } from "./site.js";
+
+const PAGES = { home: Home, about: About, why: Why, practice: Practice, book: Book, engage: Engage };
 
 export default function App() {
   const track = useRef(null);
@@ -23,16 +26,15 @@ export default function App() {
 
   return (
     <>
-      <a className="skip" href="#about">Skip to content</a>
+      {/* Skips the opening page to the first page after it. */}
+      <a className="skip" href={`#${CHAPTERS[1].id}`}>Skip to content</a>
       <TopBar active={active} />
       <main className="track" ref={track} tabIndex={-1}>
         <Thread />
-        <Home />
-        <About />
-        <Why />
-        <Practice />
-        <Book />
-        <Engage />
+        {CHAPTERS.map(({ id }) => {
+          const Page = PAGES[id];
+          return <Page key={id} />;
+        })}
       </main>
       <Dock active={active} night={night} stack={stack} />
       <PrivacyNotice ref={privacy} />

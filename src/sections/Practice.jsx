@@ -39,7 +39,8 @@ export default function Practice() {
     <section className="chapter" id="practice" aria-labelledby="practice-title">
       <div className="block row banner">
         <div className="banner__text">
-          <h2 className="display banner__title" id="practice-title" data-drift>Is it rigorous?<br /><em>or</em> Is anyone using it?</h2>
+          <h2 className="display display--xl" id="practice-title" data-drift>The Practice</h2>
+          <p className="banner__ask">Is it rigorous?<br /><em>or</em> Is anyone using it?</p>
           <p className="sub">From findings to real-world change</p>
           <p className="body">KARM Practice helps a research team plan the route from its findings to real-world change, test that route while there is still time to act, and keep honest evidence of what happened along the way.</p>
         </div>
