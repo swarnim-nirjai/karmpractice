@@ -13,15 +13,9 @@
 .block { position: relative; z-index: 2; flex: none; display: flex; flex-direction: column; justify-content: center; padding: 1.2em 2.4em var(--pad-b); font-size: calc(1em * var(--f, 1)); }
 .block.row { flex-direction: row; align-items: center; gap: 3.6em; }
 
-/* Where the line draws an original drawing: each keeps the drawing's proportions. */
+/* Where the line draws a drawing: each box keeps its drawing's proportions (set by Drawing.jsx). */
 .art { position: relative; flex: none; }
 .block.row > .art { height: 100%; max-height: 36em; }
-[data-draw="logo"] { aspect-ratio: 1081 / 739; }
-[data-draw="about"] { aspect-ratio: 955 / 885; }
-[data-draw="why"] { aspect-ratio: 898 / 1058; }
-[data-draw="practice"] { aspect-ratio: 1076 / 1087; }
-[data-draw="book"] { aspect-ratio: 970 / 986; }
-[data-draw="engage"] { aspect-ratio: 738 / 1082; }
 
 /* The line, its pen, and the points and notes along it */
 .thread { position: absolute; left: 0; top: 0; z-index: 3; pointer-events: none; overflow: visible; }

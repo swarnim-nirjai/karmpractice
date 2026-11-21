@@ -1,10 +1,14 @@
 import { useState } from "react";
+import { EMAIL } from "../site.js";
 import Button from "./Button.jsx";
 import "./Forms.css";
 
-/** Checks a form and acknowledges it. The forms are not connected to a service yet. */
-function useSubmit() {
-  const [status, setStatus] = useState("");
+/**
+ * Checks a form; once it is complete, `compose` writes it out as an email ({ subject, body })
+ * and the form offers ways to send it. Nothing goes through the site: the visitor presses Send.
+ */
+function useDraft(compose) {
+  const [draft, setDraft] = useState(null);
   const onSubmit = (event) => {
     event.preventDefault();
     const form = event.currentTarget;
@@ -12,17 +16,93 @@ function useSubmit() {
       form.reportValidity();
       return;
     }
-    // Send the form to the chosen form or email service here.
-    setStatus("Thank you. This form isn’t connected yet, so nothing has been sent.");
+    setDraft(compose(new FormData(form)));
+    // Sideways, the page is laid out to fit the screen: let the engine fit the taller form.
+    requestAnimationFrame(() => window.dispatchEvent(new Event("resize")));
   };
-  return [status, onSubmit];
+  return [draft, onSubmit];
+}
+
+const field = (data, name) => (data.get(name) || "").trim();
+const BLANK = "Not given";
+
+/** The journey written out as an email, laid out like the form. */
+function composeJourney(data) {
+  const name = field(data, "name");
+  const body = [
+    "Share your research journey", "",
+    "What was the work?", field(data, "work"), "",
+    "Where did it go?", field(data, "went") || BLANK, "",
+    "Where did it stall?", field(data, "stalled") || BLANK, "",
+    "Anything you don’t want me to use?", field(data, "avoid") || BLANK, "",
+    `Your name: ${name || BLANK}`,
+    `Your institution: ${field(data, "institution") || BLANK}`,
+    `Your email: ${field(data, "email")}`,
+    `May I show your name? ${data.get("showname") === "show" ? "You may show my name" : "Please keep my name out"}`,
+    "I agree to KARM Practice using my story as described in the privacy notice: Yes",
+  ].join("\n");
+  return { subject: name ? `Research journey from ${name}` : "A research journey", body };
+}
+
+/** The sign-up written out as an email. */
+function composeSignup(data) {
+  const body = [
+    "Follow the book & site", "",
+    "Please add me to the list for one short email when something new goes up.", "",
+    `Your email: ${field(data, "email")}`,
+    "I agree to receive short updates about the book and the site, as described in the privacy notice: Yes",
+  ].join("\n");
+  return { subject: "Please add me to the KARM Practice list", body };
+}
+
+/**
+ * Ways to send the written email from wherever the visitor reads their mail: Gmail or Outlook
+ * on the web, a mail app on the device, or copied to paste anywhere.
+ */
+function SendOptions({ subject, body }) {
+  const [note, setNote] = useState("");
+  const to = encodeURIComponent(EMAIL), su = encodeURIComponent(subject), text = encodeURIComponent(body);
+  const whole = `To: ${EMAIL}\nSubject: ${subject}\n\n${body}`;
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(whole);
+      setNote(`Copied. Paste it into a new email to ${EMAIL}.`);
+    } catch {
+      setNote("select"); // no clipboard here: show the text to copy by hand
+    }
+  };
+  return (
+    <div className="send">
+      <div className="actions">
+        <Button href={`https://mail.google.com/mail/?view=cm&fs=1&to=${to}&su=${su}&body=${text}`} variant="line" target="_blank" rel="noopener">Gmail</Button>
+        <Button href={`https://outlook.office.com/mail/deeplink/compose?to=${to}&subject=${su}&body=${text}`} variant="line" target="_blank" rel="noopener">Outlook on the web</Button>
+        <Button href={`mailto:${EMAIL}?subject=${su}&body=${encodeURIComponent(body.replace(/\n/g, "\r\n"))}`} variant="line">Mail app</Button>
+        <Button type="button" variant="line" onClick={copy}>Copy the email</Button>
+      </div>
+      {note === "select" ? (
+        <textarea className="send__text" readOnly value={whole} aria-label="Your email, to copy" onFocus={(e) => e.target.select()} />
+      ) : note ? (
+        <p className="status" role="status">{note}</p>
+      ) : null}
+    </div>
+  );
+}
+
+/** What a form shows once its email is written: a word on what to do, and the ways to send it. */
+function Draft({ draft, what }) {
+  return (
+    <>
+      <p className="status" role="status">{draft ? `Your ${what} is written. Open it where you read your email, check it, and press Send.` : ""}</p>
+      {draft && <SendOptions subject={draft.subject} body={draft.body} />}
+    </>
+  );
 }
 
 const PrivacyLink = () => <a href="#privacy">privacy notice</a>;
 
 /** Share your research journey: what happened to a piece of research after publication. */
 export function JourneyForm() {
-  const [status, onSubmit] = useSubmit();
+  const [draft, onSubmit] = useDraft(composeJourney);
   return (
     <form className="form form--journey" noValidate onSubmit={onSubmit}>
       <div className="col">
@@ -47,7 +127,7 @@ export function JourneyForm() {
         <label className="consent"><input type="checkbox" name="consent" required /> <span>I agree to KARM Practice using my story as described in the <PrivacyLink />.</span></label>
         <div>
           <Button type="submit" arrow>Share my journey</Button>
-          <p className="status" role="status">{status}</p>
+          <Draft draft={draft} what="journey" />
         </div>
       </div>
     </form>
@@ -56,14 +136,14 @@ export function JourneyForm() {
 
 /** One short email when something new goes up. */
 export function SignupForm() {
-  const [status, onSubmit] = useSubmit();
+  const [draft, onSubmit] = useDraft(composeSignup);
   return (
-    <form className="form" noValidate onSubmit={onSubmit}>
+    <form className="form form--signup" noValidate onSubmit={onSubmit}>
       <div className="field"><label htmlFor="s-email">Your email</label><input id="s-email" name="email" type="email" autoComplete="email" required /></div>
       <label className="consent"><input type="checkbox" name="consent" required /> <span>I agree to receive short updates about the book and the site, as described in the <PrivacyLink />.</span></label>
       <div>
         <Button type="submit">Follow the book &amp; site</Button>
-        <p className="status" role="status">{status}</p>
+        <Draft draft={draft} what="sign-up" />
       </div>
     </form>
   );

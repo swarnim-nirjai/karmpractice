@@ -1,13 +1,43 @@
-import { clamp, loop, loopBeside, smooth, spline } from "./geometry.js";
+import { TURN, clamp, loop, loopBeside, smooth, spline, straightPath } from "./geometry.js";
 
 /** Pages begin a little before their loop, so the loop sits just inside the new page. */
 const LOOP_OFFSET = 64;
 
+/** How far outside a card the line turns up or down: within the card's own padding. */
+const STEP_OUT = 30;
+
+/**
+ * To or from a straight pass (see the `pass` glyph) the line does not curve or slant: it runs
+ * straight on, turns straight up or down in the gap between two cards, and runs straight on again.
+ * From the baseline it climbs just before a pass; after one it drops just after it.
+ */
+function rampConnector(e, s, c, { from, to }) {
+  const lane = c.lane;
+  if (from && to) {
+    const x = (e[0] + s[0]) / 2; // halfway between the cards
+    return { pts: straightPath([e, [x, e[1]], [x, s[1]], s]), pins: [] };
+  }
+  if (to) {
+    // Along the baseline as usual, then straight up just before the card.
+    const x = s[0] - STEP_OUT, start = [x - TURN, lane];
+    if (lane - s[1] < 3 || start[0] < e[0] + 60) return sidewaysConnector(e, s, c);
+    const before = sidewaysConnector(e, start, c);
+    return { pts: [...before.pts, ...straightPath([start, [x, lane], [x, s[1]], s]).slice(1)], pins: before.pins };
+  }
+  // Straight down just after the card, then along the baseline as usual.
+  if (lane - e[1] < 3) return sidewaysConnector(e, s, c);
+  const x = e[0] + STEP_OUT, end = [x + TURN, lane];
+  const drop = straightPath([e, [x, e[1]], [x, lane], end]), after = sidewaysConnector(end, s, c);
+  return { pts: [...drop, ...after.pts.slice(1)], pins: after.pins.map((pin) => ({ ...pin, idx: pin.idx + drop.length - 1 })) };
+}
+
 /**
  * Sideways: between drawings the line drops to a baseline above the page sequence,
  * wanders a little, ties a loop as it enters each new page, and rises into the next drawing.
+ * `straight` says whether the line comes from, or goes to, a straight pass.
  */
-export function sidewaysConnector(e, s, c) {
+export function sidewaysConnector(e, s, c, straight = {}) {
+  if (straight.from || straight.to) return rampConnector(e, s, c, straight);
   const lane = c.lane, dx = s[0] - e[0];
   const fromLane = Math.abs(e[1] - lane), toLane = Math.abs(s[1] - lane);
   const down = fromLane < 3 ? 0 : clamp(fromLane * 0.28, 40, 130);

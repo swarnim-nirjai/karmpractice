@@ -28,9 +28,10 @@ export function buildLine(track, stack) {
   svg.style.height = marks.style.height = `${height}px`;
 
   const origin = track.getBoundingClientRect(), sl = track.scrollLeft, st = track.scrollTop;
-  const dock = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--dock")) || 84;
+  const rootStyle = getComputedStyle(document.documentElement);
+  const dock = parseFloat(rootStyle.getPropertyValue("--dock")) || 84, top = parseFloat(rootStyle.getPropertyValue("--top")) || 60;
   const c = {
-    stack, width,
+    stack, width, top, // top: the height of the top bar
     lane: height - dock - 20, // sideways: the baseline the line runs along
     laneX: 20, // downwards: the margin line
     bounds: chapters.slice(1).map((ch) => (stack ? ch.offsetTop : ch.offsetLeft)),
@@ -68,12 +69,12 @@ export function buildLine(track, stack) {
     }
   };
 
-  let prev = null, prevBox = null;
+  let prev = null, prevBox = null, prevStraight = false;
   for (const el of track.querySelectorAll("[data-art]")) {
     if (el.offsetParent === null) continue; // not shown in this layout
     const glyph = GLYPHS[el.dataset.art](el, c);
     if (prev) {
-      const joint = stack ? downwardsConnector(prev, glyph.pts[0], prevBox, c) : sidewaysConnector(prev, glyph.pts[0], c);
+      const joint = stack ? downwardsConnector(prev, glyph.pts[0], prevBox, c) : sidewaysConnector(prev, glyph.pts[0], c, { from: prevStraight, to: !!glyph.straight });
       const base = add(joint.pts, true);
       for (let i = base; i < xs.length; i++) { keys.push(along(xs[i], ys[i])); keyLengths.push(at[i]); }
       addPins(joint.pins, base);
@@ -85,6 +86,7 @@ export function buildLine(track, stack) {
     addPins(glyph.pins, base);
     prev = glyph.pts[glyph.pts.length - 1];
     prevBox = glyph.box;
+    prevStraight = !!glyph.straight;
   }
   for (let i = 1; i < keys.length; i++) keys[i] = Math.max(keys[i], keys[i - 1]);
 

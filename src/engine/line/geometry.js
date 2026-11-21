@@ -30,6 +30,43 @@ export function spline(points, step = 8) {
   return out;
 }
 
+/** How much of each side a turn in a straight path rounds off. */
+export const TURN = 26;
+
+/**
+ * A path of straight runs through the given corners, with each turn rounded off and nothing
+ * else curved, sampled every `step` px with the slight unevenness of a line ruled by hand.
+ */
+export function straightPath(corners, step = 12) {
+  const n = corners.length, len = (a, b) => Math.hypot(b[0] - a[0], b[1] - a[1]);
+  const toward = (p, q, d) => { const l = len(p, q) || 1; return [p[0] + ((q[0] - p[0]) * d) / l, p[1] + ((q[1] - p[1]) * d) / l]; };
+  // A turn may take all of a side that ends the path, and half of a side it shares with another turn.
+  const cut = corners.map((p, i) => {
+    if (i === 0 || i === n - 1) return 0;
+    return Math.min(TURN, len(corners[i - 1], p) / (i === 1 ? 1 : 2), len(p, corners[i + 1]) / (i === n - 2 ? 1 : 2));
+  });
+  const out = [corners[0]];
+  let walked = 0;
+  for (let i = 0; i < n - 1; i++) {
+    const a = toward(corners[i], corners[i + 1], cut[i]), b = toward(corners[i + 1], corners[i], cut[i + 1]);
+    const l = len(a, b), ux = (b[0] - a[0]) / (l || 1), uy = (b[1] - a[1]) / (l || 1);
+    for (let d = step; d < l - 1; d += step) {
+      const t = walked + d, w = smooth(d / 70) * smooth((l - d) / 70) * (1.1 * Math.sin(t / 61) + 0.6 * Math.sin(t / 23 + 1.1));
+      out.push([a[0] + ux * d - uy * w, a[1] + uy * d + ux * w]);
+    }
+    if (l > 0.01) out.push(b);
+    walked += l;
+    if (i + 1 < n - 1 && cut[i + 1] > 0) {
+      const p = corners[i + 1], c = toward(p, corners[i + 2], cut[i + 1]);
+      for (let k = 1; k <= 6; k++) {
+        const t = k / 6, s = 1 - t;
+        out.push([s * s * b[0] + 2 * s * t * p[0] + t * t * c[0], s * s * b[1] + 2 * s * t * p[1] + t * t * c[1]]);
+      }
+    }
+  }
+  return out;
+}
+
 /** A small hand-drawn loop sitting on a horizontal line at (x, y). */
 export function loop(x, y, r = 10, drift = 7) {
   const out = [];

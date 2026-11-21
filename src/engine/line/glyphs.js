@@ -1,5 +1,5 @@
 import drawings from "./drawings.json";
-import { loop, smooth, spline, toPoints } from "./geometry.js";
+import { TURN, loop, smooth, spline, straightPath, toPoints } from "./geometry.js";
 
 /**
  * Everything the line draws, in page coordinates. Each glyph reads an element marked with
@@ -41,6 +41,59 @@ export const GLYPHS = {
     for (let y = cy + 12; y < bottom; y += 12) pts.push([b.x + b.w + m, y]);
     pts.push([b.x + b.w + m, bottom]);
     return { pts, box: { x: b.x - m, y: top[1] - 34, w: b.w + 2 * m, h: bottom - top[1] + 34 } };
+  },
+
+  /**
+   * A loose, hand-drawn frame round a painting. Sideways the line comes up from the baseline
+   * at the bottom-left, goes round the top and leaves at the bottom-right. Downwards it comes
+   * in at the top-left, round the right side, and leaves at the bottom-left, back to the margin.
+   */
+  frame(el, c) {
+    const b = c.box(el), m = 12, r = 22;
+    const x0 = b.x - m, y0 = b.y - m, x1 = b.x + b.w + m, y1 = b.y + b.h + m;
+    const corners = c.stack ? [[x0, y0], [x1, y0], [x1, y1], [x0, y1]] : [[x0, y1], [x0, y0], [x1, y0], [x1, y1]];
+    const wobble = (t) => 2.2 * Math.sin(t / 61) + 1.3 * Math.sin(t / 23 + 1.1);
+    const pts = [];
+    let walked = 0;
+    for (let k = 0; k < corners.length - 1; k++) {
+      const [ax, ay] = corners[k], [bx, by] = corners[k + 1], last = k === corners.length - 2;
+      const len = Math.hypot(bx - ax, by - ay), ux = (bx - ax) / len, uy = (by - ay) / len;
+      for (let d = k ? r : 0; d <= (last ? len : len - r); d += 9) {
+        const w = wobble(walked + d);
+        pts.push([ax + ux * d - uy * w, ay + uy * d + ux * w]);
+      }
+      walked += len;
+      if (last) break;
+      // Round the corner: a quarter turn from this side's end to the next side's start.
+      const [nx, ny] = corners[k + 2], len2 = Math.hypot(nx - bx, ny - by), vx = (nx - bx) / len2, vy = (ny - by) / len2;
+      const cx = bx - ux * r + vx * r, cy = by - uy * r + vy * r;
+      for (let i = 1; i < 6; i++) {
+        const a = (Math.PI / 2) * (i / 6);
+        pts.push([cx + r * (-vx * Math.cos(a) + ux * Math.sin(a)), cy + r * (-vy * Math.cos(a) + uy * Math.sin(a))]);
+      }
+    }
+    return { pts, box: { x: x0, y: y0, w: x1 - x0, h: y1 - y0 } };
+  },
+
+  /**
+   * A pass by a card (a painting and its text, everything in the painting's block): the line
+   * runs straight over the card, or straight under it along the baseline. Along a row of cards
+   * the passes alternate, and the connector steps straight up or down between them. Downwards, on
+   * phones, the cards sit one under another, so each keeps its loose frame.
+   */
+  pass(el, c) {
+    if (c.stack) return GLYPHS.frame(el, c);
+    let x0 = Infinity, x1 = -Infinity, top = Infinity;
+    for (const part of el.closest(".block").children) {
+      const b = c.box(part);
+      x0 = Math.min(x0, b.x);
+      x1 = Math.max(x1, b.x + b.w);
+      top = Math.min(top, b.y);
+    }
+    // Over: a little above the card, but clear of the top bar. Under: the baseline.
+    const y = el.dataset.pass === "under" ? c.lane : Math.max(top - 22, c.top + 8);
+    const from = x0 - 22 + TURN, to = x1 + 22 - TURN;
+    return { pts: straightPath([[from, y], [to, y]]), box: { x: from, y, w: to - from, h: 0 }, straight: true };
   },
 
   /**

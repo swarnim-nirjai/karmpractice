@@ -13,5 +13,11 @@
 .consent input { margin-top: .15em; }
 .status { min-height: 1.35em; margin: .5em 0 0; font: 400 1em/1.35 var(--sub); color: var(--voice); }
 
+/* Once the journey is written: where to send it from */
+.send .actions { margin-top: .5em; gap: .45em; }
+.send .btn { min-height: 2.5em; padding: 0 1.05em; font-size: .78em; }
+.send .status { font-size: .92em; }
+.send__text { display: block; width: 100%; height: 9em; margin-top: .6em; padding: .6em .7em; border: 1.5px solid var(--rule); border-radius: 8px; background: var(--card); font: 400 .8em/1.5 var(--text); color: var(--ink); resize: none; }
+
 html.stack .form--journey { grid-template-columns: 1fr; gap: 20px; }
 html.stack .field textarea { height: 4.6em; }

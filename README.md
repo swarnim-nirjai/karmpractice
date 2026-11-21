@@ -40,6 +40,6 @@ React renders the content. The engine reads it: every place the line draws is ma
 
 Design: Palette A (Midnight `#14213D`, Ivory `#F7F3EA`, Burgundy `#7A1F3D`, Marigold `#F2A541`); headings in Montserrat Bold, sub-headings in Calistoga, text in Montserrat, and Caveat for the handwritten notes on the line.
 
-## Still to connect
+## The forms
 
-The two forms, *Share your research journey* and *Sign-up*, are not yet connected to a form or email service. They check their fields and show a “not connected yet” message. The place to connect them is `useSubmit` in `src/components/Forms.jsx`.
+Neither form sends anything through the site. *Share your research journey* and *Sign-up* each write the answers out as an email to the address in `src/site.js`, laid out as on the form, and offer to open it in Gmail, Outlook on the web or a mail app, or to copy it; the visitor sends it from their own mailbox. To connect either to a service instead, change its `compose` function or `useDraft` in `src/components/Forms.jsx`.

@@ -26,7 +26,25 @@
 .hint svg { width: 46px; height: 14px; fill: none; stroke: var(--ink-2); stroke-width: 1.5; stroke-linecap: round; animation: nudge 1.8s var(--ease) infinite; }
 @keyframes nudge { 50% { transform: translateX(8px); } }
 
+/* The story: its own heading, then nine paintings, each with a line of text */
+.story-intro { width: 36em; padding-left: 5em; padding-right: 5em; text-align: center; }
+.story-intro .display { margin: 0; }
+.block.row.beat { gap: 3.4em; padding-right: 3.2em; }
+.painting { position: relative; flex: none; margin: 0; }
+.painting img { display: block; width: 100%; height: 100%; object-fit: cover; mix-blend-mode: multiply; }
+.block.row.beat > .painting { height: min(100%, 22em); max-width: 32em; }
+.beat__text { width: 19em; flex: none; }
+.beat__title { font-size: 2.4em; margin-bottom: .45em; }
+.beat .lead { margin: 0; }
+.beat .lead strong { font-weight: 600; }
+.beat--end .beat__title { font-size: 2.2em; margin-bottom: .3em; }
+.beat--end .sub { margin: 0; color: var(--voice); }
+
 html.stack .home { padding-top: 22px; }
+html.stack .story-intro { width: auto; padding: 64px 22px 16px 50px; }
+html.stack .block.row.beat > .painting { width: 84%; max-width: 360px; height: auto; margin: 14px auto 34px; }
+html.stack .beat__text { width: auto; }
+html.stack .beat__title { font-size: 1.9em; }
 html.stack .home__art { aspect-ratio: 1081 / 739 !important; margin: 6px 0 30px; }
 html.stack .home__text { max-width: none; }
 html.stack .home__points { position: relative; left: auto; right: auto; bottom: auto; height: 132px; margin-top: 22px; }
