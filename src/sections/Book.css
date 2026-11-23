@@ -4,7 +4,7 @@
 
 /* A cover mock-up carrying the book's drawing */
 .book-cover { gap: 4.5em; }
-.cover { position: relative; flex: none; display: flex; flex-direction: column; height: min(100%, 27em); aspect-ratio: 2 / 3; padding: 1.6em 1.4em; border-radius: 4px 10px 10px 4px; background: var(--ivory); color: var(--midnight); box-shadow: inset 7px 0 0 rgb(0 0 0 / .08), 0 40px 60px -30px rgb(0 0 0 / .55), 0 6px 14px rgb(0 0 0 / .18); transform: rotate(-3deg); }
+.cover { position: relative; flex: none; display: flex; flex-direction: column; height: 27em; max-height: 100%; aspect-ratio: 2 / 3; padding: 1.6em 1.4em; border-radius: 4px 10px 10px 4px; background: var(--ivory); color: var(--midnight); box-shadow: inset 7px 0 0 rgb(0 0 0 / .08), 0 40px 60px -30px rgb(0 0 0 / .55), 0 6px 14px rgb(0 0 0 / .18); transform: rotate(-3deg); }
 .cover.rv { transform: translateX(28px) rotate(-3deg); }
 .cover.rv.in { transform: rotate(-3deg); }
 .cover__author { font: 600 .6em/1 var(--text); letter-spacing: .2em; text-transform: uppercase; opacity: .8; }

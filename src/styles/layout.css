@@ -15,7 +15,9 @@
 
 /* Where the line draws a drawing: each box keeps its drawing's proportions (set by Drawing.jsx). */
 .art { position: relative; flex: none; }
-.block.row > .art { height: 100%; max-height: 36em; }
+/* 36em tall, or the block's height if less. Written this way round (not height: 100%) so that Safari, which
+   can't size a block from a percentage height, still counts the drawing's width in its block. */
+.block.row > .art { height: 36em; max-height: 100%; }
 
 /* The line, its pen, and the points and notes along it */
 .thread { position: absolute; left: 0; top: 0; z-index: 3; pointer-events: none; overflow: visible; }

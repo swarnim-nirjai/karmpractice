@@ -11,7 +11,7 @@
 
 /* The end of the line: it draws the logo once more and comes to rest at its centre. */
 .finale { gap: 3.5em; }
-.block.row > .finale__art { height: min(22em, 80%); }
+.block.row > .finale__art { height: 22em; max-height: 80%; } /* min(22em, 80%), written so Safari can size the block from it */
 .foot { width: 22em; flex: none; font-size: .9em; color: var(--ink-2); }
 .foot p { margin: 0 0 .6em; }
 .foot__name { display: block; margin-bottom: .6em; font: 700 1.9em/1 var(--head); letter-spacing: -.02em; color: var(--ink); }

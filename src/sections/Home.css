@@ -30,9 +30,11 @@
 .story-intro { width: 36em; padding-left: 5em; padding-right: 5em; text-align: center; }
 .story-intro .display { margin: 0; }
 .block.row.beat { gap: 3.4em; padding-right: 3.2em; }
+/* As with the portrait, the picture sits over its box and its size comes from the box alone, and the
+   box has a fixed height: Safari otherwise sizes the card from the picture once it loads, after the line is drawn. */
 .painting { position: relative; flex: none; margin: 0; }
-.painting img { display: block; width: 100%; height: 100%; object-fit: cover; mix-blend-mode: multiply; }
-.block.row.beat > .painting { height: min(100%, 22em); max-width: 32em; }
+.painting img { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; mix-blend-mode: multiply; }
+.block.row.beat > .painting { height: 22em; max-height: 100%; max-width: 32em; }
 .beat__text { width: 19em; flex: none; }
 .beat__title { font-size: 2.4em; margin-bottom: .45em; }
 .beat .lead { margin: 0; }
