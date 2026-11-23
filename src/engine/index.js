@@ -32,7 +32,9 @@ export function createEngine(track, { privacy, onActive, onNight, onMode }) {
   const introStart = performance.now() + INTRO_DELAY;
   let line = null, drawn = 0, active = -1, night = null;
   let frame = 0, resizeTimer = 0, hintTimer = 0, alive = true, lastTick = 0;
-  let lastWidth = window.innerWidth, lastStack = stack;
+  let lastWidth = window.innerWidth, lastStack = stack, sizes = "";
+
+  const sizesNow = () => blocks.map((b) => `${b.offsetWidth}x${b.offsetHeight}`).join();
 
   function layout() {
     stack = applyMode();
@@ -40,7 +42,14 @@ export function createEngine(track, { privacy, onActive, onNight, onMode }) {
     for (const title of titles) title.style.transform = "";
     fitBlocks(blocks, stack);
     line = buildLine(track, stack);
+    sizes = sizesNow();
   }
+
+  // Should a block change size after the line was drawn round it (a picture that arrives late, a
+  // browser that settles its layout late, a form that grows), the line is rebuilt round the new layout.
+  const watcher = typeof ResizeObserver === "function" ? new ResizeObserver(() => {
+    if (line && sizesNow() !== sizes) relayout();
+  }) : null;
 
   /** Where the pen should be: a little ahead of the reader; on arrival, sweeping across the logo. */
   function lead(now) {
@@ -101,6 +110,11 @@ export function createEngine(track, { privacy, onActive, onNight, onMode }) {
   function onResize() {
     // On phones, the address bar showing or hiding changes only the height: nothing to redo.
     if (isStack() && lastStack && window.innerWidth === lastWidth) return;
+    relayout();
+  }
+
+  /** Lays the page out again once things have settled, keeping the reader on their page. */
+  function relayout() {
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(() => {
       const switched = isStack() !== lastStack, page = chapters[Math.max(0, active)];
@@ -125,6 +139,7 @@ export function createEngine(track, { privacy, onActive, onNight, onMode }) {
     if (id) scroller.goTo(id, true);
     if (scroller.pos() > 10) drawn = lengthAt(line, lead());
     frame = requestAnimationFrame(tick);
+    if (watcher) for (const block of blocks) watcher.observe(block);
     if (!stack && hint) {
       hintTimer = setTimeout(() => {
         if (scroller.pos() < 40) hint.classList.add("on");
@@ -141,6 +156,7 @@ export function createEngine(track, { privacy, onActive, onNight, onMode }) {
     cancelAnimationFrame(frame);
     clearTimeout(resizeTimer);
     clearTimeout(hintTimer);
+    watcher?.disconnect();
     window.removeEventListener("resize", onResize);
     track.removeEventListener("scroll", onScroll);
     window.removeEventListener("scroll", onScroll);
